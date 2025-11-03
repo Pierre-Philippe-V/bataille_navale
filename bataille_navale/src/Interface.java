@@ -16,7 +16,7 @@ public class Interface extends Application {
         Group racine = new Group();
         Scene scene = new Scene(racine,700,700, Color.rgb(99, 107, 194));
 
-        Image logo = new Image("NAVAL.png");
+        Image logo = new Image("logo.png");
         plateau.getIcons().add(logo);
         plateau.setTitle("Bataille Navale");
         plateau.setScene(scene);

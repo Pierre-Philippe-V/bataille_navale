@@ -25,45 +25,42 @@ import java.util.Random;
 public class placement {
 
     public static void main(String[] args) {
-        Plateau_1 = new int[10][10];
-        Plateau_2 = new int[10][10];
-        int D, num_bat, taille_bat;
-        String bat,case;
+
+        int Plateau_1[][] = new int[10][10];
+        int Plateau_2[][] = new int[10][10];
+        int i, j, d, num_bat, min, max, taille_bat = 0;
+        String bat, case_;
         for (i = 0; i <= 9; i++) {
             for (j = 0; j <= 9; j++) {
-                Tableau_1[i][j] = 0;
-                Tableau_2[i][j] = 0;
+                Plateau_1[i][j] = 0;
+                Plateau_2[i][j] = 0;
             }
         }
         for (i = 0; i <= 9; i++) {
             System.out.println("Saisir quel type de bateau vous voulez placer parmi cuirasse, croiseurs, destroyers et torpilleurs");
-            bat=Lire.S();
-            if (bat=="cuirasse") {
-                taille_bat=4;
+            bat = Lire.S();
+            if (bat == "cuirasse") {
+                taille_bat = 4;
                 num_bat = 1;
-            }
-
-            else {
+            } else {
                 if (bat == "croiseurs") {
-                    taille_bat=3;
-                    int min = 2;
-                    int max = 3;
+                    taille_bat = 3;
+                    min = 2;
+                    max = 3;
                     Random random = new Random();
-                    int num_bat = random.nextInt(max + min) + min;
-                }
-                else {
+                    num_bat = random.nextInt(max + min) + min;
+                } else {
                     if (bat == "destroyers") {
-                        taille_bat=2;
-                        int min = 4;
-                        int max = 6;
+                        taille_bat = 2;
+                        min = 4;
+                        max = 6;
                         Random random = new Random();
-                        int num_bat = random.nextInt(max + min) + min;
-                    }
-                    else {
+                        num_bat = random.nextInt(max + min) + min;
+                    } else {
                         if (bat == "torpilleurs") {
-                            taille_bat=1;
-                            int min = 7;
-                            int max = 10;
+                            taille_bat = 1;
+                            min = 7;
+                            max = 10;
                             Random random = new Random();
                             num_bat = random.nextInt(max + min) + min;
                         }
@@ -71,13 +68,14 @@ public class placement {
                 }
             }
         }
-        Systrem.out.println("« Saisir 0 si vous voulez placer le bateau horizontalement, et 1 si vous voulez le placer verticalement");
+        System.out.println("« Saisir 0 si vous voulez placer le bateau horizontalement, et 1 si vous voulez le placer verticalement");
         d = Lire.i();
         if (d == 0) {
             System.out.println("Saisir la case la plus à gauche de votre bateau");
-            case=Lire.S();
-                for (i = 0; i <= (taille_bat-1); i++) {
+            case_ = Lire.S();
+            for (i = 0; i <= (taille_bat - 1); i++) {
 
+            }
         }
     }
 }
