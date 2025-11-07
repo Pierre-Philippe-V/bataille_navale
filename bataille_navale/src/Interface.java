@@ -22,8 +22,8 @@ public class Interface extends Application {
     public void start(Stage plateau) throws Exception {
 
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(20);
-        gridPane.setVgap(20);
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
         gridPane.setAlignment(Pos.CENTER);
 
         int lignes = 10;
@@ -31,10 +31,16 @@ public class Interface extends Application {
         //Ajouter les boutons
         for (int i = 0; i < lignes; i++) {
             for (int j = 0; j < coln; j++) {
-                Button button = new Button(Integer.toString(i));
+                Button button = new Button("~~~");
                 gridPane.add(button, j, i);
+                button.setOnAction(e -> {
+                    button.getStyleClass().add("bouton_select");
+                    button.setText("\uD83D\uDD34");
+                });
             }
         }
+
+
         Text titre = new Text(" ");
         titre.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 
