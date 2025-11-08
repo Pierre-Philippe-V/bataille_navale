@@ -68,6 +68,7 @@ public class placement {
                 }
             }
         }
+
         System.out.println("« Saisir 0 si vous voulez placer le bateau horizontalement, et 1 si vous voulez le placer verticalement");
         d = Lire.i();
         if (d == 0) {
