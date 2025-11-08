@@ -44,23 +44,23 @@ public class Interface extends Application {
         //Ajouter la grille de boutons
 //        for (int i = 0; i < nb_type_bat; i++) {
 
-                Button bt_type_cuirasse = new Button("Cuirassé");
-                Button bt_type_croiseur = new Button("Croiseur");
-                Button bt_type_destroyer = new Button("Destroyer");
-                Button bt_type_torpilleur = new Button("Torpilleur");
-                bt_type_cuirasse.getStyleClass().add("bt_type_bat");
-                bt_type_croiseur.getStyleClass().add("bt_type_bat");
-                bt_type_destroyer.getStyleClass().add("bt_type_bat");
-                bt_type_torpilleur.getStyleClass().add("bt_type_bat");
-                select_bat.getChildren().addAll(bt_type_torpilleur,bt_type_cuirasse,bt_type_croiseur,bt_type_destroyer);
-                bt_type_cuirasse.setOnAction(e -> {
-                    bt_type_cuirasse.getStyleClass().add("bt_type_bat_select");
-
-                });
+//                Button bt_type_cuirasse = new Button("Cuirassé");
+//                Button bt_type_croiseur = new Button("Croiseur");
+//                Button bt_type_destroyer = new Button("Destroyer");
+//                Button bt_type_torpilleur = new Button("Torpilleur");
+//                bt_type_cuirasse.getStyleClass().add("bt_type_bat");
+//                bt_type_croiseur.getStyleClass().add("bt_type_bat");
+//                bt_type_destroyer.getStyleClass().add("bt_type_bat");
+//                bt_type_torpilleur.getStyleClass().add("bt_type_bat");
+//                select_bat.getChildren().addAll(bt_type_torpilleur,bt_type_cuirasse,bt_type_croiseur,bt_type_destroyer);
+//                bt_type_cuirasse.setOnAction(e -> {
+//                    bt_type_cuirasse.getStyleClass().add("bt_type_bat_select");
+//
+//                });
 
 //        }
-        select_bat.setSpacing(10);
-        select_bat.setAlignment(Pos.CENTER);
+//        select_bat.setSpacing(10);
+//        select_bat.setAlignment(Pos.CENTER);
 
         StackPane centrer = new StackPane();
         centrer.getChildren().addAll(grille);
