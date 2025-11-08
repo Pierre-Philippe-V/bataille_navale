@@ -26,6 +26,14 @@
             -fx-text-fill:red;
             -fx-font-size: 20px;
         }
+
+        .bt_type_bat{
+            -fx-pref-width: 110px;
+
+        }
+        .bt_type_bat_select{
+            -fx-border-color: black;
+        }
         .racine{
             -fx-background-color: rgb(99, 107, 194);
 
