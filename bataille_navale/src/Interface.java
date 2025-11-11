@@ -33,6 +33,7 @@ public class Interface extends Application {
                 button.setOnAction(e -> {
                     button.getStyleClass().add("bouton_select");
                     button.setText("\uD83D\uDD34");
+
                 });
             }
         }
