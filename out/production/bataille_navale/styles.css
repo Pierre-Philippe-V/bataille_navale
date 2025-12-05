@@ -1,7 +1,7 @@
-        .button {
+        .button,.bt_type_bat {
             -fx-background-color: rgba(255,255,255,0.3);
             -fx-text-fill: white;
-            -fx-pref-width: 50px;
+
             -fx-pref-height: 50px;
             -fx-border-radius : 6px;
             -fx-background-radius : 7px;
@@ -9,11 +9,18 @@
             -fx-border-color: white;
             -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 3);
         }
+        .button{
+        -fx-pref-width: 50px;
+        }
+        .bt_type_bat{
+        -fx-pref-width: 110px;
+        }
 
-        .button:hover{
+        .button:hover,.bt_type_bat:hover{
             -fx-background-color: rgba(255,255,255,0.4);
             -fx-scale-x: 1.05;
             -fx-scale-y: 1.05;
+
         }
 
         .button:pressed{
@@ -27,9 +34,13 @@
             -fx-font-size: 20px;
         }
 
-        .bt_type_bat{
-            -fx-pref-width: 110px;
-
+        .bt_type_bat:selected{
+            -fx-background-color: rgba(255,225,225,0.4);
+            -fx-border-color: red;
+        }
+        .bt_type_bat:disabled{
+           -fx-background-color: rgba(155,125,125,0.4);
+                       -fx-border-color: gray;
         }
         .bt_type_bat_select{
             -fx-border-color: black;
@@ -38,3 +49,10 @@
             -fx-background-color: rgb(99, 107, 194);
 
         }
+        .pre_select{
+                    -fx-text-fill: rgb(75, 100, 255);
+                }
+        .bat_rempli{
+                    -fx-font-size: 20px;
+                    -fx-text-fill: rgb(30, 30, 30);
+                }
