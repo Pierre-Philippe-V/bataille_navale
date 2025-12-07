@@ -20,9 +20,6 @@ public class Main extends Application {
     public static void placement(String bateau, int taille_bat, int taille_plateau, int nb_max_bat, int[] a,
                                  int[] b, int compteur[], Button[][] boutons, int x, int y,int[] k,ToggleButton bt_type){
 
-
-
-
         a[1]=taille_plateau;
         b[1]=taille_plateau;
         if (bt_type.getUserData().equals(false)){
@@ -143,9 +140,6 @@ public class Main extends Application {
                 int x = i;
                 int y=j;
                 boutons[i][j] = bouton;
-
-
-
                 bouton.setOnAction( e -> {
                     Toggle selectedToggle = bt_type.getSelectedToggle();
                     if (selectedToggle == null) {
