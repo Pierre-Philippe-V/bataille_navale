@@ -1,7 +1,7 @@
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+//import javafx.scene.control.Button;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -19,12 +19,82 @@ import java.util.List;
 import static java.lang.Math.*;
 
 public class Main extends Application {
+    public static void placement_vh(boolean vh,int[] cas, int taille_bat, String bateau, ToggleButton bt_type, ToggleButton[][] boutons, int taille_plateau, int y,int x, int[] compteur){
+            int temp;
+        if ((abs(cas[1] - cas[0])) >= taille_bat) {
+                System.out.println("Votre " + bateau + " est trop grand (il doit faire " + taille_bat + "  cases). Veuillez recommencer votre placement");
+                bt_type.getProperties().put("compteur",0);
+            } else if (abs(cas[1] - cas[0]) < (taille_bat - 1) ) {
+                System.out.println("Votre " + bateau + " est trop petit (il doit faire " + taille_bat + "  cases). Veuillez recommencer votre placement");
+                bt_type.getProperties().put("compteur",0);
+            } else {
+                for(int i = -1;i<2;i++){
+                    for (int z = min(cas[0]-1, cas[1]-1); z <= max(cas[0]+1, cas[1]+1); z++) {
+//                        if (vh==true){
+//                            System.out.println(z+""+y);
+//                            temp=z;
+//                            z=y;
+//                            y=temp;
+//                            System.out.println(z+""+y);
+//                        }
+//                        if((y+i)>=0 && (y+i)<=(taille_plateau-1) && z>=0 && z<=(taille_plateau-1)){
+//                            boutons[z][y+i].setText("x");
+//                            boutons[z][y+i].getProperties().put("cases_prises","x");
+//                            boutons[z][y+i].getStyleClass().add("bat_rempli");}
+//                        if (vh==true){
+//                            temp=y;
+//                            y=z;
+//                            z=temp;
+//                        }
+                        if (vh==true){
+//                        System.out.println(z+""+y);
+//                        temp=z;
+//                        z=y;
+//                        y=temp;
+//                        System.out.println(z+""+y);
+                            if((x+i)>=0 && (x+i)<=(taille_plateau-1) && z>=0 && z<=(taille_plateau-1)){
+                                boutons[x+i][z].setText("x");
+                                boutons[x+i][z].getProperties().put("cases_prises","x");
+                                boutons[x+i][z].getStyleClass().add("bat_rempli");}
+                        }else{
+                            if((y+i)>=0 && (y+i)<=(taille_plateau-1) && z>=0 && z<=(taille_plateau-1)){
+                                boutons[z][y+i].setText("x");
+                                boutons[z][y+i].getProperties().put("cases_prises","x");
+                                boutons[z][y+i].getStyleClass().add("bat_rempli");}
+                        }
+                    }}
+                for (int z = min(cas[0], cas[1]); z <= max(cas[0], cas[1]); z++) {
+                    if (vh==true){
+//                        System.out.println(z+""+y);
+//                        temp=z;
+//                        z=y;
+//                        y=temp;
+//                        System.out.println(z+""+y);
+                        boutons[x][z].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
+                        boutons[x][z].getProperties().put("carte_bat",bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
+                        boutons[x][z].getStyleClass().add("bat_rempli");
+
+                    }else{
+                        boutons[z][y].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
+                        boutons[z][y].getProperties().put("carte_bat",bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
+                        boutons[z][y].getStyleClass().add("bat_rempli");
+                    }
+//                    boutons[z][y].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
+//                    boutons[z][y].getStyleClass().add("bat_rempli");
+//                    if (vh==true){
+//                        temp=y;
+//                        y=z;
+//                        z=temp;
+//                    }
+                }
+            }
+    }
 
     public static void placement(String bateau, int taille_bat, int taille_plateau, int nb_max_bat, int[] a,
-                                 int[] b, Button[][] boutons, int x, int y,ToggleButton bt_type,ToggleGroup bt_type_group,int index_actuel){
+                                 int[] b, ToggleButton[][] boutons, int x, int y,ToggleButton bt_type,ToggleGroup bt_type_group,int index_actuel){
 
         final int[] compteur = {(int)bt_type.getProperties().get("compteur")};
-        System.out.println(bt_type.getProperties().get("nb_bat_places"));
+        //System.out.println(bt_type.getProperties().get("nb_bat_places"));
         a[1]=taille_plateau;
         b[1]=taille_plateau;
         if ((int)bt_type.getProperties().get("est_place")==0){
@@ -36,41 +106,54 @@ public class Main extends Application {
                 boutons[x][y].getStyleClass().add("pre_select");
                 bt_type.getProperties().put("compteur",compteur[0]+1);
                 //System.out.println(a[0] + "," + a[1]);
+                if (boutons[x][y].getProperties().get("cases_prises").equals("x")){
+                    System.out.println("Vos bateaux sont trop proches.");
+                    bt_type.getProperties().put("compteur",0);
+                }else{
                 if ((int)bt_type.getProperties().get("compteur") > 1) {
                     if ((abs(a[0] - a[1]) > 0) && b[0] == b[1]) {
-                        if ((abs(a[1] - a[0])) >= taille_bat) {
-                            System.out.println("Votre " + bateau + " est trop grand (il doit faire " + taille_bat + "  cases). Veuillez choisir une nouvelle case");
-                            bt_type.getProperties().put("compteur",1);
-                        } else if (abs(a[1] - a[0]) < (taille_bat - 1) && (compteur[0] > 1)) {
-                            System.out.println("Votre " + bateau + " est trop petit (il doit faire " + taille_bat + "  cases). Veuillez choisir une nouvelle case");
-                            bt_type.getProperties().put("compteur",1);
-                        } else {
-                            for (int z = min(a[0], a[1]); z <= max(a[0], a[1]); z++) {
-
-                                boutons[z][y].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
-                                boutons[z][y].getStyleClass().add("bat_rempli");
-                            }
-                        }
+                        placement_vh(false,a,taille_bat,bateau,bt_type,boutons,taille_plateau,y,x,compteur);
+//                        if ((abs(a[1] - a[0])) >= taille_bat) {
+//                            System.out.println("Votre " + bateau + " est trop grand (il doit faire " + taille_bat + "  cases). Veuillez recommencer votre placement");
+//                            bt_type.getProperties().put("compteur",0);
+//                        } else if (abs(a[1] - a[0]) < (taille_bat - 1) && (compteur[0] > 1)) {
+//                            System.out.println("Votre " + bateau + " est trop petit (il doit faire " + taille_bat + "  cases). Veuillez recommencer votre placement");
+//                            bt_type.getProperties().put("compteur",0);
+//                        } else {
+//                            for(int i = -1;i<2;i++){
+//                            for (int z = min(a[0]-1, a[1]-1); z <= max(a[0]+1, a[1]+1); z++) {
+//                                if((y+i)>=0 && (y+i)<=(taille_plateau-1) && z>=0 && z<=(taille_plateau-1)){
+//                                boutons[z][y+i].setText("x");
+//                                    boutons[z][y+i].getProperties().put("cases_prises","x");
+//                                boutons[z][y+i].getStyleClass().add("bat_rempli");}
+//                            }}
+//                            for (int z = min(a[0], a[1]); z <= max(a[0], a[1]); z++) {
+//
+//                                boutons[z][y].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
+//                                boutons[z][y].getStyleClass().add("bat_rempli");
+//                            }
+//                        }
                     } else if ((abs(b[0] - b[1]) > 0) && a[0] == a[1]) {
                         // On pourrait faire une fonction pour les deux boucles pour éviter la redondance.
-                        if ((abs(b[1] - b[0])) >= taille_bat) {
-                            System.out.println("Votre " + bateau + " est trop grand (il doit faire " + taille_bat + "  cases). Veuillez choisir une nouvelle case");
-                            bt_type.getProperties().put("compteur",1);
-                        } else if (abs(b[1] - b[0]) < (taille_bat - 1) && (compteur[0] > 1)) {
-                            System.out.println("Votre " + bateau + " est trop petit (il doit faire " + taille_bat + "  cases). Veuillez choisir une nouvelle case");
-                            bt_type.getProperties().put("compteur",1);
-                        } else {
-                            for (int z = min(b[0], b[1]); z <= max(b[0], b[1]); z++) {
-
-                                boutons[x][z].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
-                                boutons[x][z].getStyleClass().add("bat_rempli");
-                            }
-                        }
+//                        if ((abs(b[1] - b[0])) >= taille_bat) {
+//                            System.out.println("Votre " + bateau + " est trop grand (il doit faire " + taille_bat + "  cases). Veuillez choisir une nouvelle case");
+//                            bt_type.getProperties().put("compteur",1);
+//                        } else if (abs(b[1] - b[0]) < (taille_bat - 1) && (compteur[0] > 1)) {
+//                            System.out.println("Votre " + bateau + " est trop petit (il doit faire " + taille_bat + "  cases). Veuillez choisir une nouvelle case");
+//                            bt_type.getProperties().put("compteur",1);
+//                        } else {
+//                            for (int z = min(b[0], b[1]); z <= max(b[0], b[1]); z++) {
+//
+//                                boutons[x][z].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
+//                                boutons[x][z].getStyleClass().add("bat_rempli");
+//                            }
+//                        }
+                        placement_vh(true,b,taille_bat,bateau,bt_type,boutons,taille_plateau,y,x,compteur);
                     } else {
                         System.out.println("Merci de bien choisir un placement soit vertical, soit horizontal.");
-                        bt_type.getProperties().put("compteur",1);
+                        bt_type.getProperties().put("compteur",0);
                     }
-                }
+                }}
             } else if ((nb_max_bat -1) > (int)bt_type.getProperties().get("nb_bat_places")) {
                 bt_type.getProperties().put("compteur",0);
                 bt_type.getProperties().put("nb_bat_places",(int)bt_type.getProperties().get("nb_bat_places")+1);
@@ -80,7 +163,7 @@ public class Main extends Application {
 
                 bt_type.getProperties().put("est_place",1);
                 bt_type.getStyleClass().add("bt_type_bat_desactive");
-                System.out.println(bt_type_group.getSelectedToggle().getProperties());
+                //System.out.println(bt_type_group.getSelectedToggle().getProperties());
 
                 while (((ToggleButton)bt_type_group.getToggles().get(((int)bt_type.getProperties().get("index")+index_actuel)%4)).isDisabled()){
                     index_actuel=index_actuel+1;
@@ -90,20 +173,32 @@ public class Main extends Application {
                     }
                 }
                 bt_type_group.getToggles().get(((int)bt_type.getProperties().get("index")+index_actuel)%4).setSelected(true);
-                System.out.println(((int)bt_type.getProperties().get("index")+index_actuel));
+                //System.out.println(((int)bt_type.getProperties().get("index")+index_actuel));
                 bt_type.setDisable(true);
 
 
             }
         }
+        //torpilleur
+
         else {
+            if (boutons[x][y].getProperties().get("cases_prises").equals("x")){
+                System.out.println("Vos bateaux sont trop proches.");
+                bt_type.getProperties().put("compteur",0);
+            }else{
             if ((nb_max_bat) > (int)bt_type.getProperties().get("nb_bat_places") ) {
                 bt_type.getProperties().put("compteur",0);
                 bt_type.getProperties().put("nb_bat_places",(int)bt_type.getProperties().get("nb_bat_places")+1);
-                boutons[x][y].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
-                boutons[x][y].setUserData(bt_type.getProperties().get("nb_bat_places"));
+                for(int i=-1;i<2;i++)
+                for(int z=-1;z<2;z++) {
+                    if(x+i>=0 && x+i<=(taille_plateau-1) && y+z>=0 &&y+z<=(taille_plateau-1)){
+                    boutons[x+i][y+z].getProperties().put("cases_prises","x");
+                    boutons[x+i][y+z].setText("x");
+                    boutons[x+i][y+z].getStyleClass().add("bat_rempli");}
+                }
+                boutons[x][y].setText(bt_type.getProperties().get("index").toString() + "" + bt_type.getProperties().get("nb_bat_places").toString());
+                boutons[x][y].getProperties().put("carte_bat", bt_type.getProperties().get("index").toString() + "" + bt_type.getProperties().get("nb_bat_places").toString());
                 boutons[x][y].getStyleClass().add("bat_rempli");
-
             }
             if (nb_max_bat<=(int)bt_type.getProperties().get("nb_bat_places")){
                 System.out.println("Tous les "+bateau+"s sont placés.");
@@ -120,15 +215,15 @@ public class Main extends Application {
                 bt_type_group.getToggles().get(((int)bt_type.getProperties().get("index")+index_actuel)%4).setSelected(true);
             }
 
-        }}
+        }}}
     }
     private int taille_plateau = 10;                // taille de la grille (n x n)
-    private Button[][] boutons;     // matrice des boutons
+    private ToggleButton[][] boutons;     // matrice des boutons
 
     @Override
     public void start(Stage plateau) {
         GridPane grille = new GridPane();
-        boutons = new Button[taille_plateau][taille_plateau];
+        boutons = new ToggleButton[taille_plateau][taille_plateau];
         int[] a = new int[2];
         int[] b = new int[2];
         HBox select_bat = new HBox();
@@ -159,11 +254,13 @@ public class Main extends Application {
 
         for (int i = 0; i < taille_plateau; i++) {
             for (int j = 0; j < taille_plateau; j++) {
-                Button bouton = new Button("");
+                ToggleButton bouton = new ToggleButton("");
                 bouton.setPrefSize(60, 60);
                 int x = i;
                 int y=j;
                 boutons[i][j] = bouton;
+                boutons[i][j].getProperties().put("cases_prises",0);
+                boutons[i][j].getStyleClass().add("button");
                 bouton.setOnAction( e -> {
                     Toggle selectedToggle = bt_type.getSelectedToggle();
                     if (selectedToggle == null) {
