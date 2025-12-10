@@ -1,7 +1,8 @@
         .button,.bt_type_bat {
             -fx-background-color: rgba(255,255,255,0.3);
             -fx-text-fill: white;
-
+            -fx-font-family: "Montserrat";
+            -fx-font-weight: bolder;
             -fx-pref-height: 50px;
             -fx-border-radius : 6px;
             -fx-background-radius : 7px;
@@ -53,6 +54,6 @@
                     -fx-text-fill: rgb(75, 100, 255);
                 }
         .bat_rempli{
-                    -fx-font-size: 20px;
+                    -fx-font-size: 10px;
                     -fx-text-fill: rgb(30, 30, 30);
                 }
