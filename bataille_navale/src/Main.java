@@ -46,13 +46,13 @@ public class Main extends Application {
                     }}
                 for (int z = min(cas[0], cas[1]); z <= max(cas[0], cas[1]); z++) {
                     if (vh==true){
-                        boutons[x][z].setText("⚫");
+                        boutons[x][z].setText("⬛");
                         //boutons[x][z].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
                         boutons[x][z].getProperties().put("carte_bat",bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
                         boutons[x][z].getStyleClass().add("bat_rempli");
 
                     }else{
-                        boutons[z][y].setText("⚫");
+                        boutons[z][y].setText("⬛");
                         //boutons[z][y].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
                         boutons[z][y].getProperties().put("carte_bat",bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
                         boutons[z][y].getStyleClass().add("bat_rempli");
@@ -81,6 +81,7 @@ public class Main extends Application {
                 if (boutons[x][y].getProperties().get("cases_prises").equals("x")){
                     System.out.println("Vos bateaux sont trop proches.");
                     bt_type.getProperties().put("compteur",0);
+                    compteur[0]=0;
                 }else{
                 if ((int)bt_type.getProperties().get("compteur") > 1) {
                     if ((abs(a[0] - a[1]) > 0) && b[0] == b[1]) {
@@ -135,7 +136,7 @@ public class Main extends Application {
                     boutons[x+i][y+z].getStyleClass().add("bat_rempli");}
                 }
                 //boutons[x][y].setText(bt_type.getProperties().get("index").toString() + "" + bt_type.getProperties().get("nb_bat_places").toString());
-                boutons[x][y].setText("⚫");
+                boutons[x][y].setText("⬛");
                 boutons[x][y].getProperties().put("carte_bat", bt_type.getProperties().get("index").toString() + "" + bt_type.getProperties().get("nb_bat_places").toString());
                 boutons[x][y].getStyleClass().add("bat_rempli");
             }
