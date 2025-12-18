@@ -6,6 +6,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 import static java.lang.Math.*;
 
@@ -60,9 +62,11 @@ public class Main extends Application {
                 }
             }
     }
-
-    public static void placement(String bateau, int taille_bat, int taille_plateau, int nb_max_bat, int[] a,
+    int u=-1;
+    int v=-1;
+    public  void placement(String bateau, int taille_bat, int taille_plateau, int nb_max_bat, int[] a,
                                  int[] b, ToggleButton[][] boutons, int x, int y,ToggleButton bt_type,ToggleGroup bt_type_group,int index_actuel){
+
 
         final int[] compteur = {(int)bt_type.getProperties().get("compteur")};
         //System.out.println(bt_type.getProperties().get("nb_bat_places"));
@@ -74,8 +78,20 @@ public class Main extends Application {
             if (compteur[0] < 2) {
                 a[compteur[0]] = x;
                 b[compteur[0]] = y;
+
+
+                if ((u!=-1)&&(v!=-1)&&((boutons[u][v].getText()=="\uD83D\uDD34")||(boutons[u][v].getText()=="❌"))){
+                    boutons[u][v].setText("");
+                }
                 boutons[x][y].setText("\uD83D\uDD34");
                 boutons[x][y].getStyleClass().add("pre_select");
+                if (boutons[x][y].getProperties().get("cases_prises").equals("x")){
+                    boutons[x][y].setText("❌");
+                    boutons[x][y].getStyleClass().add("case_prise");
+                }
+                u=x;
+                v=y;
+
                 bt_type.getProperties().put("compteur",compteur[0]+1);
                 //System.out.println(a[0] + "," + a[1]);
                 if (boutons[x][y].getProperties().get("cases_prises").equals("x")){
@@ -201,6 +217,9 @@ public class Main extends Application {
                 boutons[i][j] = bouton;
                 boutons[i][j].getProperties().put("cases_prises",0);
                 boutons[i][j].getStyleClass().add("button");
+                if (((i%2==1)||(j%2==1))&&!((i%2==1)&&(j%2==1))) {
+                    boutons[i][j].getStyleClass().add("button2");
+                }
                 bouton.setOnAction( e -> {
                     Toggle selectedToggle = bt_type.getSelectedToggle();
                     if (selectedToggle == null) {
@@ -229,6 +248,12 @@ public class Main extends Application {
             }
         }
 
+        Image mer = new Image("vagues2.png");
+        ImageView vagues = new ImageView(mer);
+        vagues.setPreserveRatio(true);
+        vagues.setFitWidth(1920);
+        vagues.setFitHeight(1080);
+        StackPane.setAlignment(vagues,Pos.BOTTOM_CENTER);
         select_bat.setSpacing(10);
         select_bat.setAlignment(Pos.CENTER);
 
@@ -237,13 +262,17 @@ public class Main extends Application {
         grille.setAlignment(Pos.CENTER);
 
         StackPane centrer = new StackPane();
+        VBox centrer2 = new VBox();
+        centrer2.getChildren().addAll(centrer,select_bat);
         centrer.getChildren().addAll(grille);
-        VBox racine = new VBox();
+        centrer2.setSpacing(20);
+        centrer2.setAlignment(Pos.CENTER);
+        StackPane racine = new StackPane();
         racine.getStyleClass().add("racine");
-        racine.getChildren().addAll(centrer,select_bat);
+        racine.getChildren().addAll(vagues,centrer2);
         racine.setAlignment(Pos.CENTER);
-        racine.setSpacing(20);
-        Scene scene = new Scene(racine,700,700, Color.rgb(99, 107, 194));
+
+        Scene scene = new Scene(racine,800,800, Color.rgb(99, 107, 194));
         scene.getStylesheets().add("/styles.css");
         Image logo = new Image("logo.png");
         plateau.getIcons().add(logo);

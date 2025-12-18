@@ -3,6 +3,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -62,6 +63,12 @@ public class Interface extends Application {
 //        }
 //        select_bat.setSpacing(10);
 //        select_bat.setAlignment(Pos.CENTER);
+//        Image mer = new Image("vagues.png");
+//        ImageView vagues = new ImageView(mer);
+//        vagues.setFitHeight(800);
+//        vagues.setPreserveRatio(true);
+//        vagues.setX(0);
+//        vagues.setY(0);
 
         StackPane centrer = new StackPane();
         centrer.getChildren().addAll(grille);
