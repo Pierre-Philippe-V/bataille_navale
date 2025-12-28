@@ -20,7 +20,7 @@ import java.util.Stack;
 
 import static java.lang.Math.*;
 
-public class Main extends Application {
+public class tir extends Application {
     public static void placement_vh(boolean vh,int[] cas, int taille_bat, String bateau, ToggleButton bt_type, ToggleButton[][] boutons, int taille_plateau, int y,int x, int[] compteur){
         int temp;
         if ((abs(cas[1] - cas[0])) >= taille_bat) {
@@ -64,6 +64,13 @@ public class Main extends Application {
     }
     int u=-1;
     int v=-1;
+    // PV des bateaux : index 0=cuirassé, 1=croiseur, 2=destroyer, 3=torpilleur
+    private int[] pv_bateaux = {4, 3, 2, 1};
+    private ToggleButton bt_tirer;
+
+    // Nombre total de bateaux à couler
+    private int total_bateaux = 1 + 2 + 3 + 4;
+    private int bateaux_coules = 0;
     public  void placement(String bateau, int taille_bat, int taille_plateau, int nb_max_bat, int[] a,
                            int[] b, ToggleButton[][] boutons, int x, int y,ToggleButton bt_type,ToggleGroup bt_type_group,int index_actuel){
 
@@ -175,7 +182,43 @@ public class Main extends Application {
     }
     private int taille_plateau = 10;                // taille de la grille (n x n)
     private ToggleButton[][] boutons;     // matrice des boutons
+    public void tirer(int x, int y) {
+        System.out.println("Mode tir activé");
+        ToggleButton bouton = boutons[x][y];
 
+        if (!bouton.getProperties().get("etat_tir").equals("non_tire")) {
+            System.out.println("Vous avez déjà tiré ici.");
+            return;
+        }
+
+        bouton.getProperties().put("etat_tir", "tire");
+
+        if (bouton.getProperties().get("carte_bat") == null) {
+            bouton.setText("🌊");
+            bouton.getStyleClass().add("manque");
+            System.out.println("Manqué !");
+            return;
+        }
+
+        String id = bouton.getProperties().get("carte_bat").toString();
+        int index_bateau = Character.getNumericValue(id.charAt(0));
+
+        pv_bateaux[index_bateau]--;
+
+        bouton.setText("🔥");
+        bouton.getStyleClass().add("touche");
+
+        System.out.println("Touché !");
+
+        if (pv_bateaux[index_bateau] == 0) {
+            bateaux_coules++;
+            System.out.println("Touché-coulé !");
+
+            if (bateaux_coules == total_bateaux) {
+                System.out.println("🎉 Tous les bateaux sont coulés ! Victoire !");
+            }
+        }
+    }
     @Override
     public void start(Stage plateau) {
         GridPane grille = new GridPane();
@@ -201,13 +244,16 @@ public class Main extends Application {
             z.getProperties().put("est_place",0);
             z.getProperties().put("compteur",0);
             z.setToggleGroup(bt_type);
+            bt_tirer.setToggleGroup(bt_type);
             z.getStyleClass().add("bt_type_bat");
             z.getProperties().put("index",k);
             k=k+1;
         }
 
-        select_bat.getChildren().addAll(bt_type_torpilleur,bt_type_cuirasse,bt_type_croiseur,bt_type_destroyer);
-
+        select_bat.getChildren().addAll(bt_type_torpilleur,bt_type_cuirasse,bt_type_croiseur,bt_type_destroyer,bt_tirer);
+        bt_tirer = new ToggleButton("Tirer");
+        bt_tirer.getStyleClass().add("bt_type_bat");
+        select_bat.getChildren().addAll(bt_tirer);
         for (int i = 0; i < taille_plateau; i++) {
             for (int j = 0; j < taille_plateau; j++) {
                 ToggleButton bouton = new ToggleButton("");
@@ -216,6 +262,7 @@ public class Main extends Application {
                 int y=j;
                 boutons[i][j] = bouton;
                 boutons[i][j].getProperties().put("cases_prises",0);
+                boutons[i][j].getProperties().put("etat_tir", "non_tire");
                 boutons[i][j].getStyleClass().add("button");
                 if (((i%2==1)||(j%2==1))&&!((i%2==1)&&(j%2==1))) {
                     boutons[i][j].getStyleClass().add("button2");
@@ -226,6 +273,10 @@ public class Main extends Application {
                         System.out.println("Merci de sélectionner un type de bateau.");
                         return;
                     }
+                    if (selectedToggle == bt_tirer) {
+                        tirer(x, y);
+                        return;
+                     {
                     ToggleButton type_bateau = (ToggleButton)selectedToggle;
                     switch (type_bateau.getText()) {
                         case "Cuirassé":
@@ -243,11 +294,10 @@ public class Main extends Application {
                         default:
                             System.out.println("Sélection de bateau non reconnue.");
                     }
-                });
+                };
                 grille.add(bouton, j, i);
             }
-        }
-
+            },
         Image mer = new Image("vagues2.png");
         ImageView vagues = new ImageView(mer);
         vagues.setPreserveRatio(true);
@@ -257,9 +307,9 @@ public class Main extends Application {
         select_bat.setSpacing(10);
         select_bat.setAlignment(Pos.CENTER);
 
-        grille.setHgap(10);
-        grille.setVgap(10);
-        grille.setAlignment(Pos.CENTER);
+       grille.setHgap(10);
+       grille.setVgap(10);
+       grille.setAlignment(Pos.CENTER);
 
         StackPane centrer = new StackPane();
         VBox centrer2 = new VBox();
@@ -274,7 +324,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(racine,800,800, Color.rgb(99, 107, 194));
         scene.getStylesheets().add("/styles.css");
-        Image logo = new Image("logo2.png");
+        Image logo = new Image("logo.png");
         plateau.getIcons().add(logo);
         plateau.setTitle("Bataille Navale");
         plateau.setScene(scene);
