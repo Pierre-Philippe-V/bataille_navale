@@ -66,7 +66,7 @@ public class tir extends Application {
     int v=-1;
     // PV des bateaux : index 0=cuirassé, 1=croiseur, 2=destroyer, 3=torpilleur
     private int[] pv_bateaux = {4, 3, 2, 1};
-    private ToggleButton bt_tirer;
+
 
     // Nombre total de bateaux à couler
     private int total_bateaux = 1 + 2 + 3 + 4;
@@ -244,16 +244,17 @@ public class tir extends Application {
             z.getProperties().put("est_place",0);
             z.getProperties().put("compteur",0);
             z.setToggleGroup(bt_type);
-            bt_tirer.setToggleGroup(bt_type);
+
             z.getStyleClass().add("bt_type_bat");
             z.getProperties().put("index",k);
             k=k+1;
         }
-
+        final ToggleButton bt_tirer = new ToggleButton("Tirer");
+        bt_tirer.setToggleGroup(bt_type);
         select_bat.getChildren().addAll(bt_type_torpilleur,bt_type_cuirasse,bt_type_croiseur,bt_type_destroyer,bt_tirer);
-        bt_tirer = new ToggleButton("Tirer");
+
         bt_tirer.getStyleClass().add("bt_type_bat");
-        select_bat.getChildren().addAll(bt_tirer);
+
         for (int i = 0; i < taille_plateau; i++) {
             for (int j = 0; j < taille_plateau; j++) {
                 ToggleButton bouton = new ToggleButton("");
@@ -276,7 +277,7 @@ public class tir extends Application {
                     if (selectedToggle == bt_tirer) {
                         tirer(x, y);
                         return;
-                     {
+                    }
                     ToggleButton type_bateau = (ToggleButton)selectedToggle;
                     switch (type_bateau.getText()) {
                         case "Cuirassé":
@@ -294,10 +295,11 @@ public class tir extends Application {
                         default:
                             System.out.println("Sélection de bateau non reconnue.");
                     }
-                };
+                     });
                 grille.add(bouton, j, i);
             }
-            },
+            }
+
         Image mer = new Image("vagues2.png");
         ImageView vagues = new ImageView(mer);
         vagues.setPreserveRatio(true);
