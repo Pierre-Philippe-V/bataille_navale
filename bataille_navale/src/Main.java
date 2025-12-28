@@ -274,7 +274,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(racine,800,800, Color.rgb(99, 107, 194));
         scene.getStylesheets().add("/styles.css");
-        Image logo = new Image("logo.png");
+        Image logo = new Image("logo2.png");
         plateau.getIcons().add(logo);
         plateau.setTitle("Bataille Navale");
         plateau.setScene(scene);
