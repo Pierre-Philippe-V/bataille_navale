@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="l">
+    <CLASSES>
+      <root url="file://$USER_HOME$/OneDrive/Documents/COURS/STH1/Informatique/Projet/javafx-sdk-21.0.9/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Downloads/src.zip!/src" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/OneDrive/Documents/COURS/STH1/Informatique/Projet/javafx-sdk-21.0.9/lib" recursive="false" />
+  </library>
+</component>
