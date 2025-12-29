@@ -1,0 +1,40 @@
+        .button {
+            -fx-background-color: rgba(255,255,255,0.3);
+            -fx-text-fill: white;
+            -fx-pref-width: 50px;
+            -fx-pref-height: 50px;
+            -fx-border-radius : 6px;
+            -fx-background-radius : 7px;
+            -fx-border-width: 2px;
+            -fx-border-color: white;
+            -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 3);
+        }
+
+        .button:hover{
+            -fx-background-color: rgba(255,255,255,0.4);
+            -fx-scale-x: 1.05;
+            -fx-scale-y: 1.05;
+        }
+
+        .button:pressed{
+            -fx-background-color: rgba(255,255,255,0.5);
+            -fx-scale-x: 1.05;
+            -fx-scale-y: 1.05;
+        }
+
+        .bouton_select{
+            -fx-text-fill:red;
+            -fx-font-size: 20px;
+        }
+
+        .bt_type_bat{
+            -fx-pref-width: 110px;
+
+        }
+        .bt_type_bat_select{
+            -fx-border-color: black;
+        }
+        .racine{
+            -fx-background-color: rgb(99, 107, 194);
+
+        }
