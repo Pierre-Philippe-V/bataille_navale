@@ -16,13 +16,12 @@ import javafx.stage.Stage;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Stack;
 
 import static java.lang.Math.*;
 
 public class tir extends Application {
-    public static void placement_vh(boolean vh,int[] cas, int taille_bat, String bateau, ToggleButton bt_type, ToggleButton[][] boutons, int taille_plateau, int y,int x, int[] compteur){
-        int temp;
+    public void placement_vh(boolean vh,int[] cas, int taille_bat, String bateau, ToggleButton bt_type, ToggleButton[][] boutons, int taille_plateau, int y,int x, int[] compteur){
+
         if ((abs(cas[1] - cas[0])) >= taille_bat) {
             System.out.println("Votre " + bateau + " est trop grand (il doit faire " + taille_bat + "  cases). Veuillez recommencer votre placement");
             bt_type.getProperties().put("compteur",0);
@@ -34,7 +33,7 @@ public class tir extends Application {
         } else {
             for(int i = -1;i<2;i++){
                 for (int z = min(cas[0]-1, cas[1]-1); z <= max(cas[0]+1, cas[1]+1); z++) {
-                    if (vh==true){
+                    if (vh){
                         if((x+i)>=0 && (x+i)<=(taille_plateau-1) && z>=0 && z<=(taille_plateau-1)){
                             //boutons[x+i][z].setText("x");
                             boutons[x+i][z].getProperties().put("cases_prises","x");
@@ -47,17 +46,65 @@ public class tir extends Application {
                     }
                 }}
             for (int z = min(cas[0], cas[1]); z <= max(cas[0], cas[1]); z++) {
-                if (vh==true){
+                if (vh){
                     boutons[x][z].setText("⬛");
+                    boutons[x][z].getProperties().put("carte_bat_indicative"+(etape-1),"⬛");
                     //boutons[x][z].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
-                    boutons[x][z].getProperties().put("carte_bat",bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
+                    boutons[x][z].getProperties().put("carte_bat"+(etape-1),bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
                     boutons[x][z].getStyleClass().add("bat_rempli");
 
                 }else{
                     boutons[z][y].setText("⬛");
+                    boutons[z][y].getProperties().put("carte_bat_indicative"+(etape-1),"⬛");
                     //boutons[z][y].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
-                    boutons[z][y].getProperties().put("carte_bat",bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
+                    boutons[z][y].getProperties().put("carte_bat"+(etape-1),bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
                     boutons[z][y].getStyleClass().add("bat_rempli");
+                }
+            }
+        }
+    }
+    final ToggleButton bt_tirer = new ToggleButton("Tirer");
+    ToggleButton bt_type_cuirasse = new ToggleButton("Cuirassé");
+    ToggleButton bt_type_croiseur = new ToggleButton("Croiseur");
+    ToggleButton bt_type_destroyer = new ToggleButton("Destroyer");
+    ToggleButton bt_type_torpilleur = new ToggleButton("Torpilleur");
+    ToggleGroup bt_type = new ToggleGroup();
+    List<ToggleButton> liste_bt = Arrays.asList(
+            bt_type_cuirasse,
+            bt_type_croiseur,
+            bt_type_destroyer,
+            bt_type_torpilleur
+    );
+    public void reinitialiser(){
+        for (int o = 0; o < taille_plateau; o++) {
+            for (int p = 0; p < taille_plateau; p++) {
+
+                boutons[o][p].getProperties().put("cases_prises", 0);
+                boutons[o][p].setText("");
+            }
+        }
+
+        for(ToggleButton z : liste_bt ){
+            z.setDisable(false);
+            z.getProperties().put("nb_bat_places",0);
+            z.getProperties().put("est_place",0);
+            z.getProperties().put("compteur",0);
+        }
+
+    }
+    public void effacer_txt(){
+        for (int o = 0; o < taille_plateau; o++) {
+            for (int p = 0; p < taille_plateau; p++) {
+                boutons[o][p].setText("");
+            }
+        }
+    }
+    public void ecrire(int tour){
+        for (int o = 0; o < taille_plateau; o++) {
+            for (int p = 0; p < taille_plateau; p++) {
+                boutons[o][p].setText(boutons[o][p].getProperties().get("carte_bat_indicative"+(tour%2)).toString());
+                if (!boutons[o][p].getProperties().get("coups"+(tour%2)).toString().isEmpty()) {
+                    boutons[o][p].setText(boutons[o][p].getProperties().get("coups" + (tour%2)).toString());
                 }
             }
         }
@@ -65,12 +112,11 @@ public class tir extends Application {
     int u=-1;
     int v=-1;
     // PV des bateaux : index 0=cuirassé, 1=croiseur, 2=destroyer, 3=torpilleur
-    private int[] pv_bateaux = {4, 3, 2, 1};
-
-
+    private int[][][] pv_bateaux = {{{4,0,0,0},{3,3,0,0},{2,2,2,0},{1,1,1,1}},{{4,0,0,0},{3,3,0,0},{2,2,2,0},{1,1,1,1}}};
+    int etape = 1;
     // Nombre total de bateaux à couler
     private int total_bateaux = 1 + 2 + 3 + 4;
-    private int bateaux_coules = 0;
+    private int[] bateaux_coules = {0,0};
     public  void placement(String bateau, int taille_bat, int taille_plateau, int nb_max_bat, int[] a,
                            int[] b, ToggleButton[][] boutons, int x, int y,ToggleButton bt_type,ToggleGroup bt_type_group,int index_actuel){
 
@@ -128,15 +174,32 @@ public class tir extends Application {
                         System.out.println("Tous les "+bateau+"s sont placés.");
                         bt_type.getProperties().put("est_place",1);
                         bt_type.getStyleClass().add("bt_type_bat_desactive");
-                        while (((ToggleButton)bt_type_group.getToggles().get(((int)bt_type.getProperties().get("index")+index_actuel)%4)).isDisabled()){
-                            index_actuel=index_actuel+1;
-                            if (index_actuel>3){
-                                System.out.println("Que la partie commence !");
-                                break;
-                            }
-                        }
                         bt_type_group.getToggles().get(((int)bt_type.getProperties().get("index")+index_actuel)%4).setSelected(true);
                         bt_type.setDisable(true);
+                        while (((ToggleButton)bt_type_group.getToggles().get(((int)bt_type.getProperties().get("index")+index_actuel)%4)).isDisabled()){
+                            index_actuel=index_actuel+1;
+                            if (index_actuel==4){
+                                if (etape==1) {
+                                    System.out.println("2e Joueur");
+
+                                    reinitialiser();
+                                    etape++;
+
+                                    break;
+                                }
+                                if(etape==2){
+                                    System.out.println("Phase de tir");
+                                    bt_tirer.setManaged(true);
+                                    for(ToggleButton z:liste_bt){
+                                        z.setManaged(false);
+                                        z.setVisible(false);
+                                    }
+                                    effacer_txt();
+                                    break;
+                                }
+                            }
+                        }
+
                     }
                 }
 
@@ -160,7 +223,8 @@ public class tir extends Application {
                             }
                         //boutons[x][y].setText(bt_type.getProperties().get("index").toString() + "" + bt_type.getProperties().get("nb_bat_places").toString());
                         boutons[x][y].setText("⬛");
-                        boutons[x][y].getProperties().put("carte_bat", bt_type.getProperties().get("index").toString() + "" + bt_type.getProperties().get("nb_bat_places").toString());
+                        boutons[x][y].getProperties().put("carte_bat_indicative"+(etape-1),"⬛");
+                        boutons[x][y].getProperties().put("carte_bat"+(etape-1), bt_type.getProperties().get("index").toString() + "" + ((int)bt_type.getProperties().get("nb_bat_places")-1));
                         boutons[x][y].getStyleClass().add("bat_rempli");
                     }
                     if (nb_max_bat<=(int)bt_type.getProperties().get("nb_bat_places")){
@@ -170,9 +234,25 @@ public class tir extends Application {
                         bt_type.setDisable(true);
                         while (((ToggleButton)bt_type_group.getToggles().get(((int)bt_type.getProperties().get("index")+index_actuel)%4)).isDisabled()){
                             index_actuel=index_actuel+1;
-                            if (index_actuel>3){
-                                System.out.println("Que la partie commence !");
-                                break;
+                            if (index_actuel==4){
+                                if (etape==1) {
+                                    System.out.println("2e Joueur");
+                                    System.out.println(etape);
+                                    reinitialiser();
+                                    etape++;
+
+                                    break;
+                                }
+                                if(etape==2){
+                                    System.out.println("Phase de tir");
+                                    bt_tirer.setManaged(true);
+                                    for(ToggleButton z:liste_bt){
+                                        z.setManaged(false);
+                                        z.setVisible(false);
+                                    }
+                                    effacer_txt();
+                                    break;
+                                }
                             }
                         }
                         bt_type_group.getToggles().get(((int)bt_type.getProperties().get("index")+index_actuel)%4).setSelected(true);
@@ -182,62 +262,62 @@ public class tir extends Application {
     }
     private int taille_plateau = 10;                // taille de la grille (n x n)
     private ToggleButton[][] boutons;     // matrice des boutons
-    public void tirer(int x, int y) {
-        System.out.println("Mode tir activé");
+    int tour=0;
+    public void tirer(int x, int y, ToggleButton bt_tirer) {
         ToggleButton bouton = boutons[x][y];
 
-        if (!bouton.getProperties().get("etat_tir").equals("non_tire")) {
+        if (!bouton.getProperties().get("etat_tir"+(tour%2)).equals("non_tire")) {
             System.out.println("Vous avez déjà tiré ici.");
             return;
         }
 
-        bouton.getProperties().put("etat_tir", "tire");
+        bouton.getProperties().put("etat_tir"+(tour%2), "tire");
 
-        if (bouton.getProperties().get("carte_bat") == null) {
+        if (bouton.getProperties().get("carte_bat"+(tour%2)) == null) {
             bouton.setText("🌊");
-            bouton.getStyleClass().add("manque");
+            bouton.getProperties().put("coups"+((tour+1)%2),"🌊");
+//            bouton.getStyleClass().add("manque");
             System.out.println("Manqué !");
+            effacer_txt();
+            ecrire(tour);
+            System.out.println("C'est au tour du joueur "+((tour%2)+1));
+            tour++;
             return;
         }
 
-        String id = bouton.getProperties().get("carte_bat").toString();
-        int index_bateau = Character.getNumericValue(id.charAt(0));
-
-        pv_bateaux[index_bateau]--;
+        String id = bouton.getProperties().get("carte_bat"+(tour%2)).toString();
+        int index_bateau0 = Character.getNumericValue(id.charAt(0));
+        int index_bateau1 = Character.getNumericValue(id.charAt(1));
+        pv_bateaux[tour%2][index_bateau0][index_bateau1]--;
 
         bouton.setText("🔥");
-        bouton.getStyleClass().add("touche");
+        bouton.getProperties().put("coups"+(tour%2),"x");
+        bouton.getProperties().put("coups"+((tour+1)%2),"🔥");
+//        bouton.getStyleClass().add("touche");
 
         System.out.println("Touché !");
 
-        if (pv_bateaux[index_bateau] == 0) {
-            bateaux_coules++;
+        if (pv_bateaux[tour%2][index_bateau0][index_bateau1] == 0) {
+
+            bateaux_coules[tour%2]++;
             System.out.println("Touché-coulé !");
 
-            if (bateaux_coules == total_bateaux) {
+            if (bateaux_coules[tour%2] == total_bateaux) {
                 System.out.println("🎉 Tous les bateaux sont coulés ! Victoire !");
+                bt_tirer.setDisable(true);
             }
         }
     }
     @Override
     public void start(Stage plateau) {
+
         GridPane grille = new GridPane();
         boutons = new ToggleButton[taille_plateau][taille_plateau];
         int[] a = new int[2];
         int[] b = new int[2];
         HBox select_bat = new HBox();
         int index =1;
-        ToggleButton bt_type_cuirasse = new ToggleButton("Cuirassé");
-        ToggleButton bt_type_croiseur = new ToggleButton("Croiseur");
-        ToggleButton bt_type_destroyer = new ToggleButton("Destroyer");
-        ToggleButton bt_type_torpilleur = new ToggleButton("Torpilleur");
-        ToggleGroup bt_type = new ToggleGroup();
-        List<ToggleButton> liste_bt = Arrays.asList(
-                bt_type_cuirasse,
-                bt_type_croiseur,
-                bt_type_destroyer,
-                bt_type_torpilleur
-        );
+
         int k = 0;
         for(ToggleButton z : liste_bt ){
             z.getProperties().put("nb_bat_places",0);
@@ -249,9 +329,11 @@ public class tir extends Application {
             z.getProperties().put("index",k);
             k=k+1;
         }
-        final ToggleButton bt_tirer = new ToggleButton("Tirer");
+
+
         bt_tirer.setToggleGroup(bt_type);
         select_bat.getChildren().addAll(bt_type_torpilleur,bt_type_cuirasse,bt_type_croiseur,bt_type_destroyer,bt_tirer);
+        bt_tirer.setManaged(false);
 
         bt_tirer.getStyleClass().add("bt_type_bat");
 
@@ -262,39 +344,67 @@ public class tir extends Application {
                 int x = i;
                 int y=j;
                 boutons[i][j] = bouton;
+                boutons[i][j].getProperties().put("carte_bat_indicative0","");
+                boutons[i][j].getProperties().put("carte_bat_indicative1","");
                 boutons[i][j].getProperties().put("cases_prises",0);
-                boutons[i][j].getProperties().put("etat_tir", "non_tire");
+                boutons[i][j].getProperties().put("coups0","");
+                boutons[i][j].getProperties().put("coups1","");
+                boutons[i][j].getProperties().put("etat_tir0", "non_tire");
+                boutons[i][j].getProperties().put("etat_tir1", "non_tire");
                 boutons[i][j].getStyleClass().add("button");
                 if (((i%2==1)||(j%2==1))&&!((i%2==1)&&(j%2==1))) {
                     boutons[i][j].getStyleClass().add("button2");
                 }
                 bouton.setOnAction( e -> {
+
                     Toggle selectedToggle = bt_type.getSelectedToggle();
+                    ToggleButton type_bateau = (ToggleButton) selectedToggle;
                     if (selectedToggle == null) {
                         System.out.println("Merci de sélectionner un type de bateau.");
                         return;
                     }
                     if (selectedToggle == bt_tirer) {
-                        tirer(x, y);
+                        tirer(x, y, bt_tirer);
                         return;
                     }
-                    ToggleButton type_bateau = (ToggleButton)selectedToggle;
+
+
                     switch (type_bateau.getText()) {
                         case "Cuirassé":
-                            placement("cuirassé", 4, taille_plateau, 1, a, b,  boutons, x, y, bt_type_cuirasse,bt_type,index);
+                            placement("cuirassé", 4, taille_plateau, 1, a, b, boutons, x, y, bt_type_cuirasse, bt_type, index);
                             break;
                         case "Croiseur":
-                            placement("croiseur", 3, taille_plateau, 2, a, b,  boutons, x, y, bt_type_croiseur,bt_type,index);
+                            placement("croiseur", 3, taille_plateau, 2, a, b, boutons, x, y, bt_type_croiseur, bt_type, index);
                             break;
                         case "Destroyer":
-                            placement("destroyer", 2, taille_plateau, 3, a, b,  boutons, x, y, bt_type_destroyer,bt_type,index);
+                            placement("destroyer", 2, taille_plateau, 3, a, b, boutons, x, y, bt_type_destroyer, bt_type, index);
                             break;
                         case "Torpilleur":
-                            placement("torpilleur", 1, taille_plateau, 4, a, b,  boutons, x, y, bt_type_torpilleur,bt_type,index);
+                            placement("torpilleur", 1, taille_plateau, 4, a, b, boutons, x, y, bt_type_torpilleur, bt_type, index);
                             break;
                         default:
                             System.out.println("Sélection de bateau non reconnue.");
                     }
+//                        if (etape ==2) {
+//
+//                            switch (type_bateau.getText()) {
+//                                case "Cuirassé":
+//                                    placement("cuirassé", 4, taille_plateau, 1, a, b, boutons, x, y, bt_type_cuirasse, bt_type, index);
+//                                    break;
+//                                case "Croiseur":
+//                                    placement("croiseur", 3, taille_plateau, 2, a, b, boutons, x, y, bt_type_croiseur, bt_type, index);
+//                                    break;
+//                                case "Destroyer":
+//                                    placement("destroyer", 2, taille_plateau, 3, a, b, boutons, x, y, bt_type_destroyer, bt_type, index);
+//                                    break;
+//                                case "Torpilleur":
+//                                    placement("torpilleur", 1, taille_plateau, 4, a, b, boutons, x, y, bt_type_torpilleur, bt_type, index);
+//                                    break;
+//                                default:
+//                                    System.out.println("Sélection de bateau non reconnue.");
+//                            }
+//                        }
+
                      });
                 grille.add(bouton, j, i);
             }
