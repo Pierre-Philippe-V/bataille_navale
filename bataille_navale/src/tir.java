@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 //import javafx.scene.control.Button;
+import javafx.scene.control.Button;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -64,6 +65,7 @@ public class tir extends Application {
         }
     }
     final ToggleButton bt_tirer = new ToggleButton("Tirer");
+
     ToggleButton bt_type_cuirasse = new ToggleButton("Cuirassé");
     ToggleButton bt_type_croiseur = new ToggleButton("Croiseur");
     ToggleButton bt_type_destroyer = new ToggleButton("Destroyer");
@@ -96,16 +98,32 @@ public class tir extends Application {
         for (int o = 0; o < taille_plateau; o++) {
             for (int p = 0; p < taille_plateau; p++) {
                 boutons[o][p].setText("");
+                boutons[o][p].getStyleClass().add("bat_rempli");
             }
         }
+
     }
     public void ecrire(int tour){
+
         for (int o = 0; o < taille_plateau; o++) {
             for (int p = 0; p < taille_plateau; p++) {
+                boutons[o][p].getStyleClass().removeAll("manque", "touche", "touche_avant", "manque_avant");
+                String coup = boutons[o][p].getProperties().get("coups"+(tour%2)).toString();
                 boutons[o][p].setText(boutons[o][p].getProperties().get("carte_bat_indicative"+(tour%2)).toString());
+                boutons[o][p].getStyleClass().add("carte_bat_indicative");
                 if (!boutons[o][p].getProperties().get("coups"+(tour%2)).toString().isEmpty()) {
                     boutons[o][p].setText(boutons[o][p].getProperties().get("coups" + (tour%2)).toString());
+                    if(coup.equals("❌")){
+                        boutons[o][p].getStyleClass().add("manque");
+                    }
+                    else if (coup.equals("🔥")){
+                        boutons[o][p].getStyleClass().add("touche_avant");
+                    }
+                    else if (coup.equals("🌊")){
+                        boutons[o][p].getStyleClass().add("manque_avant");
+                    }
                 }
+
             }
         }
     }
@@ -190,11 +208,13 @@ public class tir extends Application {
                                 if(etape==2){
                                     System.out.println("Phase de tir");
                                     bt_tirer.setManaged(true);
+
                                     for(ToggleButton z:liste_bt){
                                         z.setManaged(false);
                                         z.setVisible(false);
                                     }
                                     effacer_txt();
+                                    ecrire(1);
                                     break;
                                 }
                             }
@@ -246,11 +266,13 @@ public class tir extends Application {
                                 if(etape==2){
                                     System.out.println("Phase de tir");
                                     bt_tirer.setManaged(true);
+
                                     for(ToggleButton z:liste_bt){
                                         z.setManaged(false);
                                         z.setVisible(false);
                                     }
                                     effacer_txt();
+                                    ecrire(1);
                                     break;
                                 }
                             }
@@ -263,8 +285,21 @@ public class tir extends Application {
     private int taille_plateau = 10;                // taille de la grille (n x n)
     private ToggleButton[][] boutons;     // matrice des boutons
     int tour=0;
+    int joueur=0;
     public void tirer(int x, int y, ToggleButton bt_tirer) {
         ToggleButton bouton = boutons[x][y];
+
+        if (joueur==1){
+            System.out.println("C'est au tour du joueur "+((tour%2)+1));
+            ecrire(tour);
+            tour++;
+            joueur=0;
+            return;
+
+        }
+
+
+
 
         if (!bouton.getProperties().get("etat_tir"+(tour%2)).equals("non_tire")) {
             System.out.println("Vous avez déjà tiré ici.");
@@ -276,12 +311,12 @@ public class tir extends Application {
         if (bouton.getProperties().get("carte_bat"+(tour%2)) == null) {
             bouton.setText("🌊");
             bouton.getProperties().put("coups"+((tour+1)%2),"🌊");
-//            bouton.getStyleClass().add("manque");
+
             System.out.println("Manqué !");
+            System.out.println();
             effacer_txt();
-            ecrire(tour);
-            System.out.println("C'est au tour du joueur "+((tour%2)+1));
-            tour++;
+            System.out.println("Cliquez un bouton pour continuer la partie.");
+            joueur=1;
             return;
         }
 
@@ -291,9 +326,9 @@ public class tir extends Application {
         pv_bateaux[tour%2][index_bateau0][index_bateau1]--;
 
         bouton.setText("🔥");
-        bouton.getProperties().put("coups"+(tour%2),"x");
+        bouton.getProperties().put("coups"+(tour%2),"❌");
         bouton.getProperties().put("coups"+((tour+1)%2),"🔥");
-//        bouton.getStyleClass().add("touche");
+        bouton.getStyleClass().add("touche");
 
         System.out.println("Touché !");
 
@@ -336,7 +371,6 @@ public class tir extends Application {
         bt_tirer.setManaged(false);
 
         bt_tirer.getStyleClass().add("bt_type_bat");
-
         for (int i = 0; i < taille_plateau; i++) {
             for (int j = 0; j < taille_plateau; j++) {
                 ToggleButton bouton = new ToggleButton("");
@@ -355,6 +389,7 @@ public class tir extends Application {
                 if (((i%2==1)||(j%2==1))&&!((i%2==1)&&(j%2==1))) {
                     boutons[i][j].getStyleClass().add("button2");
                 }
+
                 bouton.setOnAction( e -> {
 
                     Toggle selectedToggle = bt_type.getSelectedToggle();
@@ -385,26 +420,6 @@ public class tir extends Application {
                         default:
                             System.out.println("Sélection de bateau non reconnue.");
                     }
-//                        if (etape ==2) {
-//
-//                            switch (type_bateau.getText()) {
-//                                case "Cuirassé":
-//                                    placement("cuirassé", 4, taille_plateau, 1, a, b, boutons, x, y, bt_type_cuirasse, bt_type, index);
-//                                    break;
-//                                case "Croiseur":
-//                                    placement("croiseur", 3, taille_plateau, 2, a, b, boutons, x, y, bt_type_croiseur, bt_type, index);
-//                                    break;
-//                                case "Destroyer":
-//                                    placement("destroyer", 2, taille_plateau, 3, a, b, boutons, x, y, bt_type_destroyer, bt_type, index);
-//                                    break;
-//                                case "Torpilleur":
-//                                    placement("torpilleur", 1, taille_plateau, 4, a, b, boutons, x, y, bt_type_torpilleur, bt_type, index);
-//                                    break;
-//                                default:
-//                                    System.out.println("Sélection de bateau non reconnue.");
-//                            }
-//                        }
-
                      });
                 grille.add(bouton, j, i);
             }

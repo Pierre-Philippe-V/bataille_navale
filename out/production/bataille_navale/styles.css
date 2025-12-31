@@ -61,16 +61,27 @@
                     -fx-font-size: 10px;
                     -fx-text-fill: rgb(30, 30, 30);
                 }
+        .carte_bat_indicative{
+                -fx-text-fill: rgba(30, 30, 30,0.4);
+        }
+        .coule{
+                -fx-text-fill: yellow;
+        }
                 .case_prise{
                         -fx-text-fill: rgb(220, 0, 0);
                         -fx-font-size: 20px;
                         }
                 .touche {
-                        -fx-background-color: red;
-                        -fx-text-fill: white;
-                       }
 
+                        -fx-text-fill: red;
+                       }
+                .touche_avant{
+                    -fx-text-fill: orange;
+                }
+                .manque_avant{
+                    -fx-text-fill: rgba(0, 220, 255,1);
+                }
                 .manque {
-                        -fx-background-color: lightblue;
-                        -fx-text-fill: navy;
+
+                        -fx-text-fill: rgba(30, 30, 30,0.4);
                        }
