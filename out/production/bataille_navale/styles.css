@@ -13,6 +13,14 @@
         .button{
         -fx-pref-width: 50px;
         }
+        .modes{
+            -fx-pref-width:300px;
+        }
+        .titre_bat_nav{
+            -fx-font-family: "Montserrat";
+            -fx-font-weight: bolder;
+            -fx-font-size:40px;
+        }
         .bt_type_bat{
         -fx-pref-width: 110px;
         }
