@@ -21,6 +21,13 @@
             -fx-font-weight: bolder;
             -fx-font-size:40px;
         }
+        .marin{
+            -fx-font-family: "Montserrat";
+            -fx-font-weight: bolder;
+            -fx-text-fill: white;
+
+            -fx-font-size:20px;
+        }
         .bt_type_bat{
         -fx-pref-width: 110px;
         }
