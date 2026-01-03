@@ -81,7 +81,6 @@ public class tir extends Application {
                     boutons[x][z].setText("⬛");
                     // On stocke son affichage pour pouvoir le réafficher à tout moment
                     boutons[x][z].getProperties().put("carte_bat_indicative"+(etape-1),"⬛");
-                    //Pour le developpement : (affiche les indices) boutons[x][z].setText(bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
                     //On stocke le type du bateau et son numéro dans les boutons (pour le tir)
                     boutons[x][z].getProperties().put("carte_bat"+(etape-1),bt_type.getProperties().get("index").toString()+""+bt_type.getProperties().get("nb_bat_places").toString());
                     boutons[x][z].getStyleClass().add("bat_rempli");
@@ -281,7 +280,6 @@ public class tir extends Application {
                     boutons[x][y].getProperties().put("carte_bat_indicative"+(etape-1),"⬛");
                     boutons[x][y].getProperties().put("carte_bat"+(etape-1), bt_type_torpilleur.getProperties().get("index").toString() + "" + ((int)bt_type_torpilleur.getProperties().get("nb_bat_places")-1));
                     boutons[x][y].getStyleClass().add("bat_rempli");
-
             }
         }
 
@@ -391,7 +389,6 @@ public class tir extends Application {
                         }
                     }
                 }
-
             }
             //Placement des torpilleurs (même fonctionnement pour 1 case, plus léger en vérifications)
             else {
@@ -464,7 +461,6 @@ public class tir extends Application {
     List<Integer> cases_valides_tir = new ArrayList<>();
     List<Integer> cases_invalides_tir = new ArrayList<>();
     int[][][] heatmap=new int[2][100][100];
-
 
     public void tirer(int x, int y,boolean ia) {
         // Dans cette partie on utilise des %2 puisqu'il n'y a que deux joueurs, on veut juste
@@ -577,7 +573,6 @@ public class tir extends Application {
                         dir2 =1;
                         tour++;
                         tirer(position_du_tir[0]-1,position_du_tir[1],true);
-
                         tour++;
                         return;
                     }else if (dir3 ==0){
@@ -988,7 +983,4 @@ public class tir extends Application {
         plateau.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 }
