@@ -42,12 +42,14 @@ public class tir extends Application {
                         if((x+i)>=0 && (x+i)<=(taille_plateau-1) && z>=0 && z<=(taille_plateau-1)){
                             //boutons[x+i][z].setText("x");
                             boutons[x+i][z].getProperties().put("cases_prises","x");
-                            boutons[x+i][z].getStyleClass().add("bat_rempli");}
+                            boutons[x+i][z].getStyleClass().add("bat_rempli");
+                        }
                     }else{
                         if((y+i)>=0 && (y+i)<=(taille_plateau-1) && z>=0 && z<=(taille_plateau-1)){
                             //boutons[z][y+i].setText("x");
                             boutons[z][y+i].getProperties().put("cases_prises","x");
-                            boutons[z][y+i].getStyleClass().add("bat_rempli");}
+                            boutons[z][y+i].getStyleClass().add("bat_rempli");
+                        }
                     }
                 }
             }
@@ -221,20 +223,23 @@ public class tir extends Application {
 
                     bt_type_torpilleur.getProperties().put("compteur",0);
                     bt_type_torpilleur.getProperties().put("nb_bat_places",(int)bt_type_torpilleur.getProperties().get("nb_bat_places")+1);
-                    for(int i=-1;i<2;i++)
+                    for(int i=-1;i<2;i++){
                         for(int z=-1;z<2;z++) {
                             if(x+i>=0 && x+i<=(taille_plateau-1) && y+z>=0 &&y+z<=(taille_plateau-1)){
                                 boutons[x+i][y+z].getProperties().put("cases_prises","x");
                                 //boutons[x+i][y+z].setText("x");
-                                boutons[x+i][y+z].getStyleClass().add("bat_rempli");}
+                                boutons[x+i][y+z].getStyleClass().add("bat_rempli");
+                            }
                         }
+                    }
                     //En commentaire ci-dessous : donne les indices des bateaux.
                     //boutons[x][y].setText(bt_type.getProperties().get("index").toString() + "" + bt_type.getProperties().get("nb_bat_places").toString());
                     boutons[x][y].setText("⬛");
                     boutons[x][y].getProperties().put("carte_bat_indicative"+(etape-1),"⬛");
                     boutons[x][y].getProperties().put("carte_bat"+(etape-1), bt_type_torpilleur.getProperties().get("index").toString() + "" + ((int)bt_type_torpilleur.getProperties().get("nb_bat_places")-1));
                     boutons[x][y].getStyleClass().add("bat_rempli");
-                }
+
+            }
         }
 
     }
@@ -358,7 +363,8 @@ public class tir extends Application {
                                 if(x+i>=0 && x+i<=(taille_plateau-1) && y+z>=0 &&y+z<=(taille_plateau-1)){
                                     boutons[x+i][y+z].getProperties().put("cases_prises","x");
                                     //boutons[x+i][y+z].setText("x");
-                                    boutons[x+i][y+z].getStyleClass().add("bat_rempli");}
+                                    boutons[x+i][y+z].getStyleClass().add("bat_rempli");
+                                }
                             }
                         //En commentaire ci-dessous : donne les indices des bateaux.
                         //boutons[x][y].setText(bt_type.getProperties().get("index").toString() + "" + bt_type.getProperties().get("nb_bat_places").toString());
@@ -411,6 +417,7 @@ public class tir extends Application {
     int dir1, dir2, dir3, dir4,coup_juste=0;
     int[] position_du_tir = new int[2];
     List<Integer> cases_valides_tir = new ArrayList<>();
+    List<Integer> cases_invalides_tir = new ArrayList<>();
 
     public void tirer(int x, int y,boolean ia) {
         // Dans cette partie on utilise des %2 puisqu'il n'y a que deux joueurs, on veut juste
@@ -480,12 +487,11 @@ public class tir extends Application {
             System.out.println("Vous avez manqué.");
             bouton.getStyleClass().add("manque_avant");
             }else{
-                marin.setText("L'IA a manqué.");
                 System.out.print("L'IA a tiré dans le vide//");
                 //On enlève la case pour que l'IA ne la tire plus.
                 System.out.println("On enlève la case"+coord_base100%10+","+(coord_base100-coord_base100%10)/10);
                 cases_valides_tir.remove(Integer.valueOf(coord_base100));
-                bouton.setText("IA");
+                //bouton.setText("IA");
             }
             bouton.getProperties().put("coups"+((tour+1)%2),"🌊");
             if(mode==0){
@@ -509,6 +515,9 @@ public class tir extends Application {
                 }else{
                     //En difficulté 2 si l'IA a touché un bateau elle tente les 4 directions autour.
                     if (coup_juste>=1){
+                        if(coup_juste>=2){
+                            coup_juste=1;
+                        }
                     if (dir2 ==0){
                         System.out.println("L'IA place un point vers le haut");
                         dir2 =1;
@@ -644,26 +653,77 @@ public class tir extends Application {
             bateaux_coules[tour%2]++;
             if(!ia) {
                 marin.setText("Touché-coulé!");
+                int total_bateaux = 1 + 2 + 3 + 4;
+                if (bateaux_coules[tour%2] == total_bateaux) {
+                    System.out.println("La partie est finie.");
+                    marin.setText("Vous avez gagné !");
+                    bt_tirer.setDisable(true);
+                }
             }else{
                 marin.setText("L'IA a coulé l'un de vos bateaux !");
-                // Réinitialisation des directions..
-                coup_juste=0;
-                dir1 =0;
-                dir2 =0;
-                dir3 =0;
-                dir4 =0;
+
+                if(mode==2) {
+                    // Réinitialisation des directions..
+                    coup_juste = 0;
+                    dir1 = 0;
+                    dir2 = 0;
+                    dir3 = 0;
+                    dir4 = 0;
+                    //On supprime les cases autour d'un bateau coulé.
+                    if(index_type_bateau==3){
+                        for(int i=-1;i<2;i++){
+                            for(int z=-1;z<2;z++) {
+                                if(x+i>=0 && x+i<=(taille_plateau-1) && y+z>=0 &&y+z<=(taille_plateau-1)){
+                                    coord_base100=(y+z)*10+(x+i);
+                                    cases_invalides_tir.add(coord_base100);
+                                    //boutons[x+i][y+z].setText("xIA");
+                                }
+                            }
+                        }
+                        cases_valides_tir.removeAll(cases_invalides_tir);
+                        cases_invalides_tir.clear();
+                    }else{
+                        if(position_du_tir[0]==x) {
+                            for (int i = -1; i < 2; i++) {
+                                for (int z = min(position_du_tir[1] - 1, y - 1); z <= max(position_du_tir[1] + 1, y + 1); z++) {
+                                    if ((x + i) >= 0 && (x + i) <= (taille_plateau - 1) && z >= 0 && z <= (taille_plateau - 1)) {
+                                        coord_base100=z*10+(x+i);
+                                        cases_invalides_tir.add(coord_base100);
+                                        //boutons[x + i][z].setText("xIA");
+                                    }
+                                }
+                            }
+                            cases_valides_tir.removeAll(cases_invalides_tir);
+                            cases_invalides_tir.clear();
+                        }else if(position_du_tir[1]==y){
+                            for (int i = -1; i < 2; i++) {
+                                for (int z = min(position_du_tir[0] - 1, x - 1); z <= max(position_du_tir[0] + 1, x + 1); z++) {
+                                    if ((y + i) >= 0 && (y + i) <= (taille_plateau - 1) && z >= 0 && z <= (taille_plateau - 1)) {
+                                        coord_base100=(y+i)*10+z;
+                                        cases_invalides_tir.add(coord_base100);
+                                        //boutons[z][y+i].setText("xIA");
+                                    }
+                                }
+                            }
+                            cases_valides_tir.removeAll(cases_invalides_tir);
+                            cases_invalides_tir.clear();
+                        }
+                    }
+                    System.out.println(bateaux_coules[tour%2]+" Bateaux sont coulés !");
+                }
                 //Nouveau tir aléatoire dans les cases valides.
+                int total_bateaux = 1 + 2 + 3 + 4;
+                if (bateaux_coules[tour%2] == total_bateaux) {
+                    System.out.println("La partie est finie.");
+                    marin.setText("L'IA a gagné.");
+                    bt_tirer.setDisable(true);
+                }
                 case_aleatoire = cases_valides_tir.get(new Random().nextInt(cases_valides_tir.size()));
                 tirer(case_aleatoire%10,(case_aleatoire-case_aleatoire%10)/10,true);
                 return;
             }
             // Nombre total de bateaux à couler
-            int total_bateaux = 1 + 2 + 3 + 4;
-            if (bateaux_coules[tour%2] == total_bateaux) {
-                System.out.println("La partie est finie.");
-                marin.setText("C'est la fin de la partie !");
-                bt_tirer.setDisable(true);
-            }
+
         }
     }
 
