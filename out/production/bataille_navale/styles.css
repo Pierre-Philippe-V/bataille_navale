@@ -24,7 +24,7 @@
         .marin{
             -fx-font-family: "Montserrat";
             -fx-font-weight: bolder;
-            -fx-text-fill: white;
+            -fx-text-fill: black;
 
             -fx-font-size:20px;
         }
