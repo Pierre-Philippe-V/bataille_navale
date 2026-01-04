@@ -303,7 +303,6 @@ public class bataille_navale extends Application {
                     boutons[x][y].setText("\uD83D\uDD34");
                     boutons[x][y].getStyleClass().add("pre_select");
                     // une croix si il est invalide.
-                    // NOTE DE DEVELOPPEMENT : On pourrait peut-être mettre ça dans le if en dessous.
                     if (boutons[x][y].getProperties().get("cases_prises").equals("x")){
                         boutons[x][y].setText("❌");
                         boutons[x][y].getStyleClass().add("case_prise");
@@ -321,7 +320,6 @@ public class bataille_navale extends Application {
                         if ((int)bt_type.getProperties().get("compteur") > 1) {
                             //On vérifie si les x sont égaux (placement vertical) ou si les y le sont (vertical),
                             //ou non (invalide).
-                            // NOTE DE DEVELOPPEMENT : on pourrait peut-être enlever les valeurs absolues ici.
                             if ((abs(a[0] - a[1]) > 0) && b[0] == b[1]) {
                                 placement_vertical_horizontal(false,a,taille_bat,bateau,bt_type,boutons,taille_plateau,y,x,compteur,false);
                             } else if ((abs(b[0] - b[1]) > 0) && a[0] == a[1]) {
